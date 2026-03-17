@@ -22,10 +22,13 @@ Where dashdot relies on Node.js and a heavy frontend stack, DashDust is written 
 
 ## Screenshots
 
-
 ![Dashboard overview](docs/screenshots/screen-1.png)
+
 ![CPU & Memory](docs/screenshots/screen-2.png)
-![Storage & Network](docs/screenshots/storage-network.png)
+
+### Usage of the container 
+
+![Storage & Network](docs/screenshots/screen-3.png)
 
 ---
 
@@ -47,8 +50,8 @@ Where dashdot relies on Node.js and a heavy frontend stack, DashDust is written 
 | Runtime | Node.js | Native binary (musl) |
 | Frontend | Js / Typescript | WebAssembly (Leptos) |
 | Base image | ~200 MB+ | ~15 MB |
-| Idle CPU | ~1–3 % | < 0.1 % |
-| Idle RAM | ~80–150 MB | ~5–10 MB |
+| Idle CPU | ~1–3 % | < 0.5 % |
+| Idle RAM | ~80–150 MB | < 5 MB |
 | WebSocket history | — | 60 s replay on connect |
 
 ---
