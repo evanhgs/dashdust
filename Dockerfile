@@ -29,6 +29,7 @@ RUN cd frontend && trunk build --release || true
 
 COPY backend ./backend
 COPY frontend/src ./frontend/src
+COPY frontend/favicon.ico ./frontend/favicon.ico
 
 WORKDIR /app/frontend
 RUN trunk build --release
