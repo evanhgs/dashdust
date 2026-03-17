@@ -1,0 +1,15 @@
+services:
+  dashdust:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dashdust
+    restart: unless-stopped
+    ports:
+      - "3300:3000"
+    volumes:
+      - /etc/os-release:/etc/os-release:ro
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=10m
