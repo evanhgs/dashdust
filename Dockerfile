@@ -2,7 +2,7 @@ FROM --platform=$BUILDPLATFORM alpine:3.21 AS trunk-downloader
 
 RUN apk add --no-cache curl tar
 
-RUN TRUNK_VERSION="0.21.4" && \
+RUN TRUNK_VERSION="0.21.14" && \
     curl -fsSL "https://github.com/trunk-rs/trunk/releases/download/v${TRUNK_VERSION}/trunk-x86_64-unknown-linux-musl.tar.gz" \
     | tar -xzf - -C /usr/local/bin trunk && \
     chmod +x /usr/local/bin/trunk

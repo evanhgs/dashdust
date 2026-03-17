@@ -10,8 +10,8 @@ use axum::{
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use std::{
-    collections::HashMap,
-    sync::Arc,
+    collections::{HashMap, VecDeque},
+    sync::{Arc, Mutex},
     time::{Duration, Instant},
 };
 use sysinfo::{DiskKind, Disks, Networks, System};
@@ -72,19 +72,34 @@ struct Metrics {
     networks: Vec<NetworkInfo>,
 }
 
-type AppState = Arc<broadcast::Sender<String>>;
+const HISTORY_SIZE: usize = 60;
+
+#[derive(Clone)]
+struct AppState {
+    tx: Arc<broadcast::Sender<String>>,
+    history: Arc<Mutex<VecDeque<String>>>,
+}
 
 async fn ws_handler(
     ws: WebSocketUpgrade,
-    State(tx): State<AppState>,
+    State(state): State<AppState>,
 ) -> impl IntoResponse {
-    ws.on_upgrade(move |socket| handle_socket(socket, tx))
+    ws.on_upgrade(move |socket| handle_socket(socket, state))
 }
 
-async fn handle_socket(socket: WebSocket, tx: Arc<broadcast::Sender<String>>) {
-    let mut rx = tx.subscribe();
+async fn handle_socket(socket: WebSocket, state: AppState) {
+    let mut rx = state.tx.subscribe();
     let (mut sender, _receiver) = socket.split();
 
+    // Snapshot history (drop lock before any await)
+    let snapshot: Vec<String> = state.history.lock().unwrap().iter().cloned().collect();
+    for msg in snapshot {
+        if sender.send(Message::Text(msg.into())).await.is_err() {
+            return;
+        }
+    }
+
+    // Stream live updates
     while let Ok(msg) = rx.recv().await {
         if sender.send(Message::Text(msg.into())).await.is_err() {
             break;
@@ -178,7 +193,10 @@ fn collect_metrics(
 async fn main() {
     let (tx, _rx) = broadcast::channel::<String>(16);
     let tx = Arc::new(tx);
+    let history: Arc<Mutex<VecDeque<String>>> = Arc::new(Mutex::new(VecDeque::new()));
+
     let tx_clone = tx.clone();
+    let history_clone = history.clone();
 
     tokio::spawn(async move {
         let mut sys = System::new_all();
@@ -201,16 +219,25 @@ async fn main() {
                 &mut prev_time,
             );
             if let Ok(json) = serde_json::to_string(&metrics) {
+                {
+                    let mut hist = history_clone.lock().unwrap();
+                    hist.push_back(json.clone());
+                    if hist.len() > HISTORY_SIZE {
+                        hist.pop_front();
+                    }
+                }
                 let _ = tx_clone.send(json);
             }
         }
     });
 
+    let state = AppState { tx, history };
+
     let app = Router::new()
         .route("/ws", get(ws_handler))
         .fallback_service(ServeDir::new("dist"))
         .layer(CorsLayer::permissive())
-        .with_state(tx);
+        .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     println!("DashDust running on http://0.0.0.0:3000");

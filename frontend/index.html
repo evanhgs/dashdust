@@ -9,39 +9,38 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg:          #0d0f14;
-            --bg-card:     #111520;
-            --bg-item:     rgba(255,255,255,0.025);
-            --border:      #1a2236;
-            --border-hover:#253049;
-            --text-1:      #e8eaf0;
-            --text-2:      #6b7a99;
-            --text-3:      #323d55;
-            --blue:        #4a9eff;
-            --purple:      #9b6dff;
-            --teal:        #2dd4bf;
-            --green:       #4ade80;
-            --orange:      #fb923c;
-            --red:         #f87171;
+            --bg:       #0d0f14;
+            --bg-card:  #111520;
+            --bg-item:  rgba(255,255,255,0.025);
+            --border:   #1a2236;
+            --border-h: #253049;
+            --t1: #e8eaf0;
+            --t2: #6b7a99;
+            --t3: #2e3a52;
+            --blue:   #4a9eff;
+            --purple: #9b6dff;
+            --teal:   #2dd4bf;
+            --green:  #4ade80;
+            --orange: #fb923c;
+            --red:    #f87171;
         }
 
         body {
             background: var(--bg);
-            color: var(--text-1);
+            color: var(--t1);
             font-family: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
             min-height: 100vh;
             font-size: 14px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Layout ───────────────────────────────── */
         .dashboard {
             max-width: 1440px;
             margin: 0 auto;
             padding: 0 1.5rem 3rem;
         }
 
-        /* ── Header ───────────────────────────────── */
+        /* ── Header */
         .header {
             display: flex;
             align-items: center;
@@ -52,7 +51,6 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 1rem; }
-        .header-right { display: flex; align-items: center; gap: 1rem; }
 
         .logo {
             font-size: 1.2rem;
@@ -66,7 +64,7 @@
 
         .hostname {
             font-size: 0.8rem;
-            color: var(--text-2);
+            color: var(--t2);
             background: var(--bg-card);
             border: 1px solid var(--border);
             padding: 0.3rem 0.8rem;
@@ -79,40 +77,27 @@
             padding: 0.3rem 0.8rem;
             border-radius: 999px;
         }
-        .status.online  { color: var(--green);  background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.2); }
+        .status.online  { color: var(--green);  background: rgba(74,222,128,.08);  border: 1px solid rgba(74,222,128,.2); }
         .status.offline { color: var(--red);    background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.2); }
 
-        /* ── Main grid ─────────────────────────────── */
+        /* ── Grid */
         .main {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             gap: 1rem;
         }
 
-        /* ── Cards ─────────────────────────────────── */
+        /* ── Cards */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 18px;
-            padding: 1.5rem;
+            padding: 1.4rem;
             transition: border-color .25s, transform .25s;
             position: relative;
             overflow: hidden;
         }
-
-        .card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(74,158,255,.04), transparent 60%);
-            pointer-events: none;
-        }
-
-        .card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-        }
+        .card:hover { border-color: var(--border-h); transform: translateY(-2px); }
 
         .card-system  { grid-column: span 4; }
         .card-cpu     { grid-column: span 8; }
@@ -127,195 +112,153 @@
             .card-system, .card-cpu, .card-memory, .card-storage, .card-network { grid-column: span 12; }
         }
 
-        /* ── Card header ───────────────────────────── */
+        /* ── Card header */
         .card-header {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.1rem;
         }
-
         .card-icon { color: var(--blue); font-size: 0.85rem; }
-
         .card-title {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .1em;
-            color: var(--text-2);
+            color: var(--t2);
+        }
+        .chart-val {
+            margin-left: auto;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--t1);
+            font-variant-numeric: tabular-nums;
         }
 
-        /* ── Info grid ─────────────────────────────── */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: .6rem;
-        }
+        /* ── Info grid */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
 
         .info-item {
             background: var(--bg-item);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: .7rem .8rem;
+            padding: .65rem .75rem;
         }
-
         .info-label {
             display: block;
-            font-size: .66rem;
-            color: var(--text-3);
+            font-size: .65rem;
+            color: var(--t3);
             text-transform: uppercase;
             letter-spacing: .07em;
             margin-bottom: .3rem;
         }
-
         .info-value {
             display: block;
-            font-size: .88rem;
+            font-size: .87rem;
             font-weight: 500;
-            color: var(--text-1);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* ── CPU ───────────────────────────────────── */
+        /* ── CPU brand */
         .cpu-brand {
-            font-size: .95rem;
+            font-size: .92rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: .9rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: var(--text-1);
         }
 
-        .cores-grid {
-            margin-top: 1rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        /* ── Area chart */
+        .chart-wrap {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.015);
+            border: 1px solid var(--border);
+        }
+        .chart-wrap svg { display: block; }
+
+        .chart-axis {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            bottom: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: .6rem;
+            color: var(--t3);
+            pointer-events: none;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ── Donut (storage) */
+        .donuts { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+
+        .donut { display: flex; align-items: center; gap: 1rem; }
+
+        .donut-meta {
+            display: flex;
+            flex-direction: column;
             gap: .35rem;
         }
-
-        .core-bar { display: flex; align-items: center; gap: .4rem; }
-        .core-label { font-size: .62rem; color: var(--text-3); width: 1.4rem; flex-shrink: 0; }
-        .core-pct { font-size: .62rem; color: var(--text-2); width: 2rem; text-align: right; flex-shrink: 0; }
-
-        .mini-bar {
-            flex: 1;
-            height: 3px;
-            background: rgba(255,255,255,.04);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .mini-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width .6s ease, background .6s ease;
-        }
-
-        /* ── Usage bar ─────────────────────────────── */
-        .usage-bar-container { margin-bottom: .8rem; }
-        .usage-bar-container:last-child { margin-bottom: 0; }
-
-        .usage-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: .4rem;
-            font-size: .75rem;
-            color: var(--text-2);
-        }
-
-        .usage-pct { font-weight: 600; color: var(--text-1); }
-
-        .usage-bar {
-            width: 100%;
-            height: 5px;
-            background: rgba(255,255,255,.04);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .usage-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width .6s ease, background .6s ease;
-        }
-
-        /* ── Storage ───────────────────────────────── */
-        .disk-item { margin-bottom: 1.2rem; }
-        .disk-item:last-child { margin-bottom: 0; }
-
-        .disk-header {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            margin-bottom: .5rem;
-            flex-wrap: wrap;
-        }
-
         .disk-name { font-size: .85rem; font-weight: 500; }
-
         .disk-badge {
+            display: inline-block;
             font-size: .62rem;
             font-weight: 700;
             text-transform: uppercase;
-            padding: .15rem .5rem;
+            padding: .15rem .45rem;
             border-radius: 999px;
             background: rgba(74,158,255,.1);
             border: 1px solid rgba(74,158,255,.2);
             color: var(--blue);
+            width: fit-content;
         }
+        .disk-size { font-size: .75rem; color: var(--t2); font-variant-numeric: tabular-nums; }
 
-        .disk-mount {
-            font-size: .72rem;
-            color: var(--text-3);
-            margin-left: auto;
-        }
-
-        /* ── Network ───────────────────────────────── */
-        .net-grid {
+        /* ── Network */
+        .net-charts {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: .75rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
+        @media (max-width: 700px) { .net-charts { grid-template-columns: 1fr; } }
 
-        .net-item {
-            background: var(--bg-item);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem;
-        }
-
-        .net-name {
-            font-size: .82rem;
-            font-weight: 600;
-            margin-bottom: .75rem;
-            color: var(--text-1);
-        }
-
-        .net-stats { display: flex; flex-direction: column; gap: .5rem; }
-
-        .net-stat {
+        .net-chart-hdr {
             display: flex;
             align-items: center;
+            gap: .5rem;
+            margin-bottom: .5rem;
+        }
+        .net-arrow { font-size: 1rem; font-weight: 700; }
+        .net-down  { color: var(--teal); }
+        .net-up    { color: var(--purple); }
+        .net-chart-lbl { font-size: .72rem; color: var(--t2); }
+
+        .net-ifaces {
+            display: flex;
+            flex-wrap: wrap;
             gap: .6rem;
+            margin-top: .5rem;
         }
-
-        .net-arrow {
-            font-size: 1.1rem;
-            font-weight: 700;
-            width: 1.2rem;
-            text-align: center;
-            flex-shrink: 0;
+        .net-iface {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            background: var(--bg-item);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .45rem .75rem;
+            font-size: .75rem;
+            font-variant-numeric: tabular-nums;
         }
-
-        .net-down { color: var(--teal); }
-        .net-up   { color: var(--purple); }
-
-        .net-speed { font-size: .88rem; font-weight: 600; color: var(--text-1); }
-        .net-total { font-size: .68rem; color: var(--text-3); margin-top: .1rem; }
+        .net-iface-name { font-weight: 600; color: var(--t1); }
     </style>
 </head>
 <body>
